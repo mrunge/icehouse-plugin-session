@@ -1,0 +1,40 @@
+http://summit.openstack.org/cfp/details/36
+
+Description
+
+Currently adding stuff to horizon requires to change settings.py. This is nearly impossible in a world of software packages. At least, when using RPM packages, it is absolutely unwanted, to change files at install time, depending if other packages are installed or not. When implemented, this feature would make the life of packagers easier.
+
+The idea would be a directory to place python packages to be added dynamically to the dashboard.
+
+I'd like to hear opinions, ideas, and discussions about managing dynamic plugins, dependencies, etc...
+Having such a feature would allow others to have their customization separate from horizon, or to provide software vendors to ship functions on top of horizon.
+
+additional note: currently, I see no reason to have "plugins" at all (or why to give some kind of python modules a different treamment as others). So I propose here:
+- treat all python modules below openstack_dashboard/dashboards as "plugins". More specifically: copying a python module to this location, should add it automatically to INSTALLED_APPS, and should also add it (if appropriate) to HORIZON_CONFIG as well.
+
+longer version:
+= RPM software packages =
+when providing software packages e.g using rpm, everything comes pre-configured.
+There is no intended way to configure the software, unlike in deb packages.
+This leads to the following situation: when installed, the system admin will 
+configure the software, e.g define to use memcached, ssl etc.
+
+When upgrading, the installed config will be kept, and the new config will be
+placed as e.g local_settings.rpmnew
+
+To enable additional features e.g provided by a python package, one needs
+to edit settings.py. This behaviour is inherited from the Django framework:
+
+INSTALLED_APPS = (
+    'openstack_dashboard',
+    'django.contrib.contenttypes',
+    '....',
+    'compressor',
+    'horizon',
+    'openstack_auth',
+    'openstack_dashboard.dashboards.foo',
+    'openstack_dashboard.dashboards.bar',
+    )
+
+When adding a module (or software package) to the dashboard, one needs to
+change INSTALLED_APPS. Why is that, and why shouldn't we change this?

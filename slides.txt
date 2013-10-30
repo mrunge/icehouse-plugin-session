@@ -1,0 +1,123 @@
+:skip-help: true
+
+.. title:: "Plugins" for OpenStack Dashboard
+
+----
+
+"Plugins" for OpenStack Dashboard
+=================================
+
+Matthias Runge <mrunge@redhat.com>
+----------------------------------
+
+OpenStack Summit Hong Kong, Fall 2013
+
+----
+
+Scope
+-----
+
+* It's about packaging
+* RPM packages can't configure, different from dpkg
+* Do we even want to care on different configurations?
+
+
+----
+
+.. image:: images/ubuntu-style.jpg
+
+----
+
+.. image:: images/plain-style.jpg
+
+----
+
+.. code:: python
+
+  INSTALLED_APPS = (
+    'openstack_dashboard',
+    'django.contrib.contenttypes',
+    'django.contrib.auth',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'django.contrib.humanize',
+    'compressor',
+    'horizon',
+    'openstack_dashboard.dashboards.project',
+    'openstack_dashboard.dashboards.admin',
+    'openstack_dashboard.dashboards.settings',
+    'openstack_auth',
+    'openstack_dashboard.dashboards.router',
+  )
+
+----
+
+.. code:: python
+
+  
+  HORIZON_CONFIG = {
+    'dashboards': ('project', 'admin', 'settings', 'router',),
+    'default_dashboard': 'project',
+    'user_home': 'openstack_dashboard.views.get_user_home',
+    'ajax_queue_limit': 10,
+  ...
+
+----
+
+.. code:: 
+
+    openstack_dashboard/dashboards/
+    |-- admin
+    |-- __init__.py
+    |-- __init__.pyc
+    |-- project
+    |-- router
+    `-- settings
+
+----
+
+Questions
+=========
+
+* Do we really need to specify those? (Either dashboards or INSTALLED_APPS?
+
+  * NO, well, maybe
+
+----
+
+Proposal
+========
+
+.. code:: python
+
+  INSTALLED_APPS = (
+    'openstack_dashboard',
+    'django.contrib.contenttypes',
+    'django.contrib.auth',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'django.contrib.humanize',
+    'compressor',
+    'horizon',
+    'openstack_auth',
+  )
+
+  # add dirs below openstack_dashboard.dashboards to INSTALLED_APPS
+  DASHBOARDS = os.path.abspath(os.path.join(ROOT_PATH, 'dashboards'))
+  dashes = []
+  for dir in os.listdir(DASHBOARDS):
+      absdir = os.path.join(DASHBOARDS, dir)
+      initfile = os.path.join(absdir, '__init__.py')
+      if os.path.isdir(absdir) and os.path.isfile(initfile):
+          INSTALLED_APPS += (str('openstack_dashboard.dashboards.' + dir), )
+          dashes.append(dir)
+  HORIZON_CONFIG['dashboards'] = tuple(dashes)
+
+----
+
+What do we want next?
+=====================
+
+* disable 
