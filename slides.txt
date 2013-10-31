@@ -49,6 +49,9 @@ Scope
     'openstack_dashboard.dashboards.settings',
     'openstack_auth',
     'openstack_dashboard.dashboards.router',
+    ...
+    'openstack_dashboard.dashboards.foo',
+    'openstack_dashboard.dashboards.bar',
   )
 
 ----
@@ -120,4 +123,5 @@ Proposal
 What do we want next?
 =====================
 
-* disable 
+* disable plugins
+* add "plugins" inside admin, projects, routers, etc.
