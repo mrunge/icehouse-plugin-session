@@ -10,7 +10,7 @@
 Matthias Runge <mrunge@redhat.com>
 ----------------------------------
 
-OpenStack Summit Hong Kong, Fall 2013
+Nov 7th, 2013 OpenStack Summit Hong Kong
 
 ----
 
@@ -120,8 +120,10 @@ Proposal
 
 ----
 
-What do we want next?
+What's next?
 =====================
 
 * disable plugins
 * add "plugins" inside admin, projects, routers, etc.
+
+  * it may be possible, to construct dashboard.py in e.g. project subdir from data included in subdirs below
